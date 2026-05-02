@@ -1,0 +1,700 @@
+/* ═══════════════════════════════════════════════════════════════
+   main.css — layout nativo mobile-first para o Terço Católico
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Variáveis ────────────────────────────────────────────────── */
+:root {
+  --nav-h: 62px;
+  --header-h: 90px;
+  --safe-top:    env(safe-area-inset-top,    0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left,   0px);
+  --safe-right:  env(safe-area-inset-right,  0px);
+  --bg:          #08080f;
+  --bg-overlay:  #07070d;
+  --text:        #e2e8f0;
+  --text-muted:  #64748b;
+  --text-dim:    rgba(255,255,255,0.2);
+  --accent:      #818cf8;
+  --accent-bg:   rgba(99,102,241,0.75);
+  --border:      rgba(255,255,255,0.06);
+  --touch-min:   48px;
+}
+
+/* ── Reset global ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  height: 100%;
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Permissão de seleção só onde importa */
+.selectable {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* ── Estrelas de fundo ───────────────────────────────────────── */
+#stars-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.12; }
+  50%       { opacity: 0.5; }
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle var(--dur, 4s) ease-in-out infinite;
+}
+
+/* ── Layout do app (tipo APK: fixo, sem scroll de página) ─────── */
+#app {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+/* Cabeçalho */
+#app-header {
+  flex-shrink: 0;
+  padding: max(var(--safe-top), 1.5rem) 1.25rem 0.75rem;
+  background: var(--bg);
+  z-index: 2;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.header-icone  { font-size: 1.1rem; flex-shrink: 0; }
+.header-misterio { font-size: 0.8rem; color: rgba(167,139,250,0.7); font-weight: 500; flex: 1; }
+.header-dia    { font-size: 0.65rem; color: var(--text-dim); }
+
+.header-progress { }
+
+/* Main (área de conteúdo, sem scroll próprio) */
+#app-main {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Seção genérica: ocupa 100% do main */
+.section-full {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Barra de progresso ──────────────────────────────────────── */
+.progress-track {
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  border-radius: 9999px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.progress-label {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* ── Área de oração rolável ──────────────────────────────────── */
+.prayer-scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-bottom: 1rem;
+}
+
+/* Padding padrão de conteúdo */
+.px-content { padding-left: 1.25rem; padding-right: 1.25rem; }
+
+/* ── Tipografia das orações ──────────────────────────────────── */
+.text-serif { font-family: Georgia, 'Times New Roman', serif; }
+
+.oracao-titulo {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.75rem, 6vw, 2.4rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.25rem;
+}
+
+.oracao-texto {
+  font-size: clamp(1.05rem, 3.5vw, 1.2rem);
+  line-height: 2;
+  color: #94a3b8;
+  white-space: pre-line;
+}
+
+.oracao-texto-muted {
+  font-size: clamp(0.95rem, 3vw, 1.05rem);
+  line-height: 1.85;
+  color: #475569;
+  white-space: pre-line;
+}
+
+.label-xs {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.22);
+}
+
+.conta-abertura {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.3);
+  margin-top: 0.25rem;
+}
+
+/* ── Card de mistério ────────────────────────────────────────── */
+.misterio-banner {
+  padding: 2.5rem 1.5rem 2rem;
+  text-align: center;
+  /* background definido dinamicamente via JS */
+}
+
+.misterio-banner-icone {
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.misterio-banner-titulo {
+  font-family: Georgia, serif;
+  font-size: clamp(1.2rem, 4.5vw, 1.6rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+  margin: 0.5rem 0 1rem;
+}
+
+.misterio-fruto-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: rgba(245,158,11,0.75);
+  background: rgba(245,158,11,0.08);
+  border-radius: 9999px;
+  padding: 0.3rem 0.85rem;
+}
+
+/* ── Conclusão ───────────────────────────────────────────────── */
+.conclusao {
+  text-align: center;
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+.conclusao-icone  { font-size: 4rem; margin-bottom: 1.25rem; }
+.conclusao-titulo { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+.conclusao-msg    { font-size: 0.9rem; color: rgba(255,255,255,0.35); line-height: 1.6; margin-bottom: 0.5rem; }
+.conclusao-quote  { font-size: 0.75rem; font-style: italic; color: rgba(167,139,250,0.45); }
+
+/* ── Controles fixos na base ─────────────────────────────────── */
+.controls-bar {
+  flex-shrink: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 0.65rem 1.1rem calc(0.65rem + var(--safe-bottom, 0px));
+}
+
+.ctrl-row {
+  display: flex;
+  gap: 0.55rem;
+  margin-bottom: 0.45rem;
+}
+
+/* Botão primário (Avançar) */
+.ctrl-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: var(--touch-min);
+  background: var(--accent-bg);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 0 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.ctrl-primary:active { background: rgba(99,102,241,0.95); transform: scale(0.97); }
+
+/* Botão secundário (← ↺) */
+.ctrl-sec {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-min);
+  width: var(--touch-min);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.45);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.ctrl-sec:active  { background: rgba(255,255,255,0.12); }
+.ctrl-sec:disabled { opacity: 0.22; cursor: not-allowed; }
+
+/* ── Modo automático ─────────────────────────────────────────── */
+.auto-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.auto-btn {
+  min-height: 36px;
+  padding: 0 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.auto-btn.ativo, .auto-btn:active {
+  color: var(--accent);
+  border-color: rgba(129,140,248,0.35);
+  background: rgba(129,140,248,0.07);
+}
+
+.auto-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.auto-slider {
+  flex: 1;
+  height: 36px; /* touch target */
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.auto-label {
+  font-size: 0.65rem;
+  font-family: monospace;
+  color: rgba(167,139,250,0.45);
+  width: 1.6rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Botão ícone (fechar) ────────────────────────────────────── */
+.icon-btn {
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.09);
+  color: rgba(255,255,255,0.4);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.icon-btn:active { background: rgba(255,255,255,0.14); color: #fff; }
+
+/* ── Touch: classe base para todos os elementos interativos ───── */
+.touch-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+/* ── Navegação inferior ──────────────────────────────────────── */
+.bottom-nav {
+  flex-shrink: 0;
+  display: flex;
+  background: rgba(8,8,15,0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border);
+  height: calc(var(--nav-h) + var(--safe-bottom, 0px));
+  padding-bottom: var(--safe-bottom, 0px);
+}
+
+.tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: rgba(255,255,255,0.25);
+  transition: color 0.2s;
+}
+
+.tab-icone { font-size: 1.4rem; line-height: 1; }
+.tab-label { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.04em; }
+
+.tab-ativo { color: #a78bfa; }
+.tab-ativo .tab-icone { filter: drop-shadow(0 0 5px rgba(167,139,250,0.55)); }
+
+/* ── Overlays (contemplação + leitor) ───────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.overlay-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.overlay-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.18;
+}
+
+.overlay-bg-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #000 20%, transparent 100%);
+}
+
+.overlay-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+  padding-left: max(var(--safe-left), 1.25rem);
+  padding-right: max(var(--safe-right), 1.25rem);
+}
+
+/* ── Contemplação ────────────────────────────────────────────── */
+.cont-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-top: max(var(--safe-top), 3rem);
+  padding-bottom: 0.75rem;
+}
+
+.cont-top-info { flex: 1; padding-right: 0.75rem; }
+.cont-icone-grupo { font-size: 2.25rem; display: block; margin-bottom: 0.4rem; }
+.cont-subtitulo { font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.3; margin-top: 0.25rem; }
+.cont-fruto { font-size: 0.72rem; color: rgba(245,158,11,0.65); font-style: italic; margin-top: 0.4rem; }
+
+.cont-centro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.cont-ring-wrap { position: relative; }
+
+.cont-ring-svg {
+  display: block;
+  transform: rotate(-90deg);
+}
+
+#cont-arc {
+  transition: stroke-dashoffset 0.45s cubic-bezier(.4,0,.2,1), stroke 0.4s ease;
+}
+
+.cont-ring-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cont-numero {
+  font-size: clamp(5rem, 18vw, 6rem);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cont-total {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.3);
+  margin-top: 0.25rem;
+}
+
+.cont-dots {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 280px;
+}
+
+.cont-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cont-base {
+  padding-bottom: max(var(--safe-bottom), 1.75rem);
+}
+
+.cont-ver-oracao {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.22);
+  padding: 0.75rem;
+  min-height: var(--touch-min);
+  transition: color 0.2s;
+}
+
+.cont-ver-oracao:active { color: rgba(255,255,255,0.6); }
+
+.cont-texto-wrapper { margin-bottom: 0.75rem; }
+
+.cont-texto-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  max-height: 38vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cont-texto-p {
+  font-size: 0.9rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.6);
+  white-space: pre-line;
+}
+
+.cont-nav {
+  display: flex;
+  gap: 0.65rem;
+}
+
+/* ── Leitor de liturgia ──────────────────────────────────────── */
+.reader-dark { background: #06060c; }
+
+.reader-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(var(--safe-top), 3rem) 1.25rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.reader-header-info { flex: 1; padding-right: 1rem; }
+
+.reader-ref {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 0.15rem;
+  line-height: 1.2;
+}
+
+.reader-corpo {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 1.75rem 1.25rem 2rem;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.reader-aclamacao {
+  font-style: italic;
+  font-size: 0.85rem;
+  color: rgba(245,158,11,0.65);
+  line-height: 1.65;
+  border-left: 2px solid rgba(245,158,11,0.25);
+  padding-left: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.reader-texto {
+  font-size: clamp(1rem, 3.2vw, 1.15rem);
+  line-height: 2.05;
+  color: #94a3b8;
+  white-space: pre-line;
+}
+
+.reader-footer {
+  flex-shrink: 0;
+  display: flex;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: max(var(--safe-bottom), 0px);
+}
+
+.reader-footer-divider {
+  width: 1px;
+  background: rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.reader-nav-btn {
+  flex: 1;
+  min-height: var(--touch-min);
+  padding: 0.9rem 1rem;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.28);
+  text-align: center;
+  transition: color 0.18s, background 0.18s;
+}
+
+.reader-nav-btn:active { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.04); }
+
+/* ── Liturgia — lista de leituras ────────────────────────────── */
+.liturgia-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.lit-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60%;
+  gap: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.lit-spinner { color: rgba(167,139,250,0.4); }
+.lit-state-icon { font-size: 2.5rem; }
+.lit-state-title { font-size: 0.95rem; color: rgba(255,255,255,0.4); font-weight: 600; }
+.lit-state-msg   { font-size: 0.8rem;  color: rgba(255,255,255,0.2); line-height: 1.5; }
+
+.lit-header { padding-top: 1.5rem; padding-bottom: 1.25rem; }
+.lit-data   { font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+.lit-dia    { font-size: 0.85rem; color: rgba(255,255,255,0.3); }
+.lit-badge  { display: inline-block; font-size: 0.65rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 9999px; padding: 0.2rem 0.65rem; color: rgba(255,255,255,0.25); margin-top: 0.5rem; }
+
+.lit-items { display: flex; flex-direction: column; gap: 0.5rem; padding-bottom: 2rem; }
+
+.leitura-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 68px;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.025);
+  cursor: pointer;
+  text-align: left;
+  color: #fff;
+  width: 100%;
+  transition: background 0.15s;
+}
+
+.leitura-item:active { background: rgba(255,255,255,0.07); }
+
+.leitura-icone { font-size: 1.4rem; flex-shrink: 0; }
+.leitura-info  { flex: 1; min-width: 0; }
+.leitura-tipo  { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.28); margin-bottom: 2px; }
+.leitura-ref   { font-size: 0.95rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.leitura-seta  { font-size: 1.3rem; color: rgba(255,255,255,0.15); flex-shrink: 0; }
+
+/* ── Utilitários ─────────────────────────────────────────────── */
+.hidden { display: none !important; }
+.flex-1 { flex: 1; }
+.w-full { width: 100%; }
+.mt-6   { margin-top: 1.5rem; }
+.mt-3   { margin-top: 0.75rem; }
+.mt-5   { margin-top: 1.25rem; }
+.pt-5   { padding-top: 1.25rem; }
+.px-10  { padding-left: 2.5rem; padding-right: 2.5rem; }
+.mb-2   { margin-bottom: 0.5rem; }
+.mb-3   { margin-bottom: 0.75rem; }
+.pb-2   { padding-bottom: 0.5rem; }

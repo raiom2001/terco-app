@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="night">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- PWA / Capacitor -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Terço" />
+  <meta name="theme-color" content="#08080f" />
+
+  <title>Terço Católico</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+
+<body>
+  <div id="stars-container" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════════════
+       OVERLAY — CONTEMPLAÇÃO
+       Aparece durante as Ave Marias dos mistérios
+       ═══════════════════════════════════════════════ -->
+  <div id="contemplacao" class="overlay hidden">
+
+    <div id="cont-bg" class="overlay-bg">
+      <img id="cont-img" src="" alt="" class="overlay-bg-img" onerror="this.style.display='none'" />
+      <div class="overlay-bg-fade"></div>
+    </div>
+
+    <div class="overlay-body">
+
+      <!-- Topo -->
+      <div class="cont-top">
+        <div class="cont-top-info">
+          <span id="cont-grupo-icone" class="cont-icone-grupo"></span>
+          <p id="cont-misterio-titulo" class="label-xs"></p>
+          <p id="cont-misterio-subtitulo" class="cont-subtitulo"></p>
+          <p id="cont-fruto" class="cont-fruto"></p>
+        </div>
+        <button id="cont-sair" class="touch-btn icon-btn" aria-label="Fechar">✕</button>
+      </div>
+
+      <!-- Contador circular -->
+      <div class="cont-centro">
+        <div class="cont-ring-wrap">
+          <svg width="220" height="220" class="cont-ring-svg" aria-hidden="true">
+            <circle cx="110" cy="110" r="96" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+            <circle id="cont-arc" cx="110" cy="110" r="96" fill="none"
+              stroke="white" stroke-width="10"
+              stroke-dasharray="603.2" stroke-dashoffset="603.2"
+              stroke-linecap="round"/>
+          </svg>
+          <div class="cont-ring-inner">
+            <span id="cont-numero" class="cont-numero">1</span>
+            <span id="cont-total-label" class="cont-total">/ 10</span>
+          </div>
+        </div>
+        <div id="cont-dots" class="cont-dots"></div>
+      </div>
+
+      <!-- Base -->
+      <div class="cont-base">
+        <button id="cont-toggle-texto" class="cont-ver-oracao touch-btn">Ver Ave Maria ▼</button>
+        <div id="cont-texto-wrapper" class="cont-texto-wrapper hidden">
+          <div class="cont-texto-box">
+            <p id="cont-texto-oracao" class="text-serif cont-texto-p"></p>
+          </div>
+        </div>
+        <div class="cont-nav">
+          <button id="cont-voltar" class="touch-btn ctrl-sec" aria-label="Voltar">←</button>
+          <button id="cont-avancar" class="touch-btn ctrl-primary flex-1" aria-label="Avançar">Próxima 📿</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       OVERLAY — LEITOR DE LITURGIA
+       ═══════════════════════════════════════════════ -->
+  <div id="liturgia-reader" class="overlay hidden reader-dark">
+
+    <div class="reader-header">
+      <div class="reader-header-info">
+        <p id="reader-tipo" class="label-xs"></p>
+        <p id="reader-ref" class="reader-ref"></p>
+      </div>
+      <button id="reader-fechar" class="touch-btn icon-btn" aria-label="Fechar">✕</button>
+    </div>
+
+    <div id="reader-corpo" class="reader-corpo">
+      <p id="reader-aclamacao" class="reader-aclamacao hidden"></p>
+      <p id="reader-texto" class="text-serif reader-texto selectable"></p>
+    </div>
+
+    <div class="reader-footer">
+      <button id="reader-anterior" class="touch-btn reader-nav-btn" aria-label="Leitura anterior">← Anterior</button>
+      <div class="reader-footer-divider"></div>
+      <button id="reader-proxima" class="touch-btn reader-nav-btn" aria-label="Próxima leitura">Próxima →</button>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       APP PRINCIPAL — layout fixo tipo APK
+       ═══════════════════════════════════════════════ -->
+  <div id="app">
+
+    <!-- Cabeçalho -->
+    <header id="app-header">
+      <div class="header-row">
+        <span id="misterio-grupo-icone" class="header-icone">📿</span>
+        <p id="misterio-grupo-nome" class="header-misterio"></p>
+        <p id="nome-dia" class="header-dia"></p>
+      </div>
+      <div class="header-progress">
+        <div class="progress-track"><div id="progress-bar"></div></div>
+        <p id="progress-text" class="progress-label"></p>
+      </div>
+    </header>
+
+    <!-- Conteúdo principal (flex-1, overflow hidden) -->
+    <main id="app-main">
+
+      <!-- ── TERÇO ── -->
+      <div id="secao-terco" class="section-full">
+
+        <!-- Área de oração rolável -->
+        <div id="prayer-scroll" class="prayer-scroll">
+
+          <!-- Card: anúncio de mistério -->
+          <div id="card-misterio" class="hidden">
+            <div id="card-misterio-banner" class="misterio-banner">
+              <span id="cm-icone" class="misterio-banner-icone"></span>
+              <p id="cm-titulo" class="label-xs mt-3"></p>
+              <h2 id="cm-subtitulo" class="misterio-banner-titulo"></h2>
+              <span id="cm-fruto" class="misterio-fruto-badge"></span>
+            </div>
+            <div class="px-content pt-5 pb-2">
+              <p class="label-xs mb-3">Meditação</p>
+              <p id="cm-meditacao" class="text-serif oracao-texto-muted selectable"></p>
+            </div>
+          </div>
+
+          <!-- Card: oração normal -->
+          <div id="card-oracao" class="px-content">
+            <p id="secao" class="label-xs mb-2"></p>
+            <h2 id="titulo-oracao" class="oracao-titulo"></h2>
+            <p id="contador-abertura" class="conta-abertura hidden"></p>
+            <div class="pt-5">
+              <p id="texto-oracao" class="text-serif oracao-texto selectable"></p>
+            </div>
+          </div>
+
+          <!-- Conclusão -->
+          <div id="tela-concluido" class="hidden conclusao px-content">
+            <p class="conclusao-icone">🕊️</p>
+            <h2 class="conclusao-titulo">Terço Concluído</h2>
+            <p class="conclusao-msg">Que Nossa Senhora interceda por você e por todas as suas intenções.</p>
+            <p class="conclusao-quote">"A oração do Rosário é o resumo de todo o Evangelho."</p>
+            <button id="btn-novamente" class="touch-btn ctrl-primary w-full mt-6">↺ Rezar Novamente</button>
+          </div>
+
+        </div><!-- /prayer-scroll -->
+
+        <!-- Controles fixos na base -->
+        <div id="controls-bar" class="controls-bar">
+          <div class="ctrl-row">
+            <button id="btn-voltar"  class="touch-btn ctrl-sec"     aria-label="Voltar">←</button>
+            <button id="btn-avancar" class="touch-btn ctrl-primary flex-1" aria-label="Avançar">Avançar 📿</button>
+            <button id="btn-resetar" class="touch-btn ctrl-sec"     aria-label="Reiniciar">↺</button>
+          </div>
+          <div class="auto-row">
+            <button id="btn-auto" class="touch-btn auto-btn">▶ Auto</button>
+            <div class="auto-slider-wrap">
+              <input id="slider-auto" type="range" min="3" max="30" value="8"
+                class="auto-slider" aria-label="Intervalo automático" />
+              <span id="label-auto" class="auto-label">8s</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /secao-terco -->
+
+      <!-- ── LITURGIA ── -->
+      <div id="secao-liturgia" class="section-full hidden liturgia-scroll">
+
+        <!-- Loading -->
+        <div id="lit-loading" class="lit-state">
+          <span class="loading loading-spinner loading-md lit-spinner"></span>
+          <p class="lit-state-msg">Carregando leituras...</p>
+        </div>
+
+        <!-- Erro -->
+        <div id="lit-erro" class="lit-state hidden">
+          <p class="lit-state-icon">⚠️</p>
+          <p class="lit-state-title">Não foi possível carregar</p>
+          <p class="lit-state-msg">Verifique o servidor e a conexão.</p>
+          <button id="lit-btn-recarregar" class="touch-btn ctrl-primary mt-6 px-10">Tentar novamente</button>
+        </div>
+
+        <!-- Lista de leituras -->
+        <div id="lit-lista" class="hidden px-content">
+          <div class="lit-header">
+            <p class="label-xs mb-2">Liturgia do Dia</p>
+            <p id="lit-data" class="lit-data"></p>
+            <p id="lit-dia-liturgico" class="lit-dia"></p>
+            <span id="lit-cor-badge" class="lit-badge"></span>
+          </div>
+          <div id="lit-items" class="lit-items"></div>
+        </div>
+
+      </div><!-- /secao-liturgia -->
+
+    </main><!-- /app-main -->
+
+    <!-- Navegação inferior -->
+    <nav id="bottom-nav" class="bottom-nav">
+      <button id="tab-terco"    class="touch-btn tab-btn tab-ativo" data-tab="terco">
+        <span class="tab-icone">📿</span>
+        <span class="tab-label">Terço</span>
+      </button>
+      <button id="tab-liturgia" class="touch-btn tab-btn" data-tab="liturgia">
+        <span class="tab-icone">📖</span>
+        <span class="tab-label">Liturgia</span>
+      </button>
+    </nav>
+
+  </div><!-- /app -->
+
+  <script src="scripts/misterios.js"></script>
+  <script src="scripts/oracoes.js"></script>
+  <script src="scripts/contador.js"></script>
+  <script src="scripts/terco.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/app.js"></script>
+
+  <script>
+    (function(){
+      const c = document.getElementById('stars-container');
+      for (let i = 0; i < 30; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const sz = Math.random() * 1.5 + 0.4;
+        s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${(Math.random()*5+3).toFixed(1)}s;animation-delay:${(Math.random()*6).toFixed(1)}s`;
+        c.appendChild(s);
+      }
+    })();
+  </script>
+</body>
+</html>
