@@ -4,9 +4,9 @@ const API_BASE = 'https://terco-app.onrender.com';
 
 document.addEventListener('DOMContentLoaded', () => {
   UI.init();
-  UI.exibirInfoDia(Terco.getMisterios());
+  UI.exibirInfoDia(Misterios.getMisteriosDoDia());
   Terco.iniciar();
-  UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+  UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
   _bindEventos();
   _carregarLiturgia();
 });
@@ -15,23 +15,23 @@ function _bindEventos() {
   document.getElementById('btn-avancar')?.addEventListener('click', () => {
     UI.pulsarConta();
     Terco.avancar();
-    UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+    UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
   });
 
   document.getElementById('btn-voltar')?.addEventListener('click', () => {
     Terco.voltar();
-    UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+    UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
   });
 
   document.getElementById('btn-resetar')?.addEventListener('click', () => {
     Terco.resetar();
-    UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+    UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
   });
 
   document.getElementById('btn-novamente')?.addEventListener('click', () => {
     Terco.resetar();
     UI.esconderConcluido();
-    UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+    UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
   });
 
   document.getElementById('cont-sair')?.addEventListener('click', () => {
@@ -41,12 +41,12 @@ function _bindEventos() {
   document.getElementById('cont-avancar')?.addEventListener('click', () => {
     UI.pulsarConta();
     Terco.avancar();
-    UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+    UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
   });
 
   document.getElementById('cont-voltar')?.addEventListener('click', () => {
     Terco.voltar();
-    UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+    UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
   });
 
   document.getElementById('cont-toggle-texto')?.addEventListener('click', () => {
@@ -99,7 +99,7 @@ function _bindEventos() {
       Contador.iniciar(intervalo, () => {
         UI.pulsarConta();
         Terco.avancar();
-        UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+        UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
         if (Terco.getEstado().concluido) { Contador.parar(); UI.atualizarBtnAuto(false); }
       });
       UI.atualizarBtnAuto(true);
@@ -115,7 +115,7 @@ function _bindEventos() {
     if (Math.abs(diff) < 50) return;
     if (diff > 0) { UI.pulsarConta(); Terco.avancar(); }
     else          { Terco.voltar(); }
-    UI.renderizar(Terco.getEstado(), Terco.getMisterios());
+    UI.renderizar(Terco.getEstado(), Misterios.getMisteriosDoDia());
   }, { passive: true });
 }
 
