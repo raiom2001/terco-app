@@ -3,39 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
-
-  <!-- PWA / Capacitor -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Terço" />
-  <meta name="theme-color" content="#08080f" />
-
-  <title>Terço Católico</title>
-
+  <meta name="apple-mobile-web-app-title" content="Coroa de Mistérios" />
+  <meta name="theme-color" content="#0d0a07" />
+  <title>Coroa de Mistérios — Terço &amp; Liturgia Diária</title>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <link rel="stylesheet" href="styles/main.css" />
 </head>
-
 <body>
   <div id="stars-container" aria-hidden="true"></div>
 
-  <!-- ═══════════════════════════════════════════════
-       OVERLAY — CONTEMPLAÇÃO
-       Aparece durante as Ave Marias dos mistérios
-       ═══════════════════════════════════════════════ -->
   <div id="contemplacao" class="overlay hidden">
-
     <div id="cont-bg" class="overlay-bg">
       <img id="cont-img" src="" alt="" class="overlay-bg-img" onerror="this.style.display='none'" />
       <div class="overlay-bg-fade"></div>
     </div>
-
     <div class="overlay-body">
-
-      <!-- Topo -->
       <div class="cont-top">
         <div class="cont-top-info">
           <span id="cont-grupo-icone" class="cont-icone-grupo"></span>
@@ -43,18 +30,15 @@
           <p id="cont-misterio-subtitulo" class="cont-subtitulo"></p>
           <p id="cont-fruto" class="cont-fruto"></p>
         </div>
-        <button id="cont-sair" class="touch-btn icon-btn" aria-label="Fechar">✕</button>
+        <button id="cont-sair" class="touch-btn icon-btn" aria-label="Fechar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
-
-      <!-- Contador circular -->
       <div class="cont-centro">
         <div class="cont-ring-wrap">
           <svg width="220" height="220" class="cont-ring-svg" aria-hidden="true">
-            <circle cx="110" cy="110" r="96" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
-            <circle id="cont-arc" cx="110" cy="110" r="96" fill="none"
-              stroke="white" stroke-width="10"
-              stroke-dasharray="603.2" stroke-dashoffset="603.2"
-              stroke-linecap="round"/>
+            <circle cx="110" cy="110" r="96" fill="none" stroke="rgba(184,149,42,0.08)" stroke-width="10"/>
+            <circle id="cont-arc" cx="110" cy="110" r="96" fill="none" stroke="#b8952a" stroke-width="10" stroke-dasharray="603.2" stroke-dashoffset="603.2" stroke-linecap="round"/>
           </svg>
           <div class="cont-ring-inner">
             <span id="cont-numero" class="cont-numero">1</span>
@@ -63,8 +47,6 @@
         </div>
         <div id="cont-dots" class="cont-dots"></div>
       </div>
-
-      <!-- Base -->
       <div class="cont-base">
         <button id="cont-toggle-texto" class="cont-ver-oracao touch-btn">Ver Ave Maria ▼</button>
         <div id="cont-texto-wrapper" class="cont-texto-wrapper hidden">
@@ -74,48 +56,39 @@
         </div>
         <div class="cont-nav">
           <button id="cont-voltar" class="touch-btn ctrl-sec" aria-label="Voltar">←</button>
-          <button id="cont-avancar" class="touch-btn ctrl-primary flex-1" aria-label="Avançar">Próxima 📿</button>
+          <button id="cont-avancar" class="touch-btn ctrl-primary flex-1" aria-label="Avançar">Próxima</button>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════
-       OVERLAY — LEITOR DE LITURGIA
-       ═══════════════════════════════════════════════ -->
   <div id="liturgia-reader" class="overlay hidden reader-dark">
-
     <div class="reader-header">
       <div class="reader-header-info">
         <p id="reader-tipo" class="label-xs"></p>
         <p id="reader-ref" class="reader-ref"></p>
       </div>
-      <button id="reader-fechar" class="touch-btn icon-btn" aria-label="Fechar">✕</button>
+      <button id="reader-fechar" class="touch-btn icon-btn" aria-label="Fechar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
-
     <div id="reader-corpo" class="reader-corpo">
       <p id="reader-aclamacao" class="reader-aclamacao hidden"></p>
       <p id="reader-texto" class="text-serif reader-texto selectable"></p>
     </div>
-
     <div class="reader-footer">
       <button id="reader-anterior" class="touch-btn reader-nav-btn" aria-label="Leitura anterior">← Anterior</button>
       <div class="reader-footer-divider"></div>
       <button id="reader-proxima" class="touch-btn reader-nav-btn" aria-label="Próxima leitura">Próxima →</button>
     </div>
-
   </div>
 
-  <!-- ═══════════════════════════════════════════════
-       APP PRINCIPAL — layout fixo tipo APK
-       ═══════════════════════════════════════════════ -->
   <div id="app">
-
-    <!-- Cabeçalho -->
     <header id="app-header">
       <div class="header-row">
-        <span id="misterio-grupo-icone" class="header-icone">📿</span>
+        <span id="misterio-grupo-icone" class="header-icone" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b8952a" stroke-width="2.2"><line x1="12" y1="2" x2="12" y2="22"/><line x1="4" y1="8" x2="20" y2="8"/></svg>
+        </span>
         <p id="misterio-grupo-nome" class="header-misterio"></p>
         <p id="nome-dia" class="header-dia"></p>
       </div>
@@ -125,30 +98,25 @@
       </div>
     </header>
 
-    <!-- Conteúdo principal (flex-1, overflow hidden) -->
     <main id="app-main">
-
-      <!-- ── TERÇO ── -->
       <div id="secao-terco" class="section-full">
-
-        <!-- Área de oração rolável -->
         <div id="prayer-scroll" class="prayer-scroll">
-
-          <!-- Card: anúncio de mistério -->
           <div id="card-misterio" class="hidden">
-            <div id="card-misterio-banner" class="misterio-banner">
-              <span id="cm-icone" class="misterio-banner-icone"></span>
-              <p id="cm-titulo" class="label-xs mt-3"></p>
-              <h2 id="cm-subtitulo" class="misterio-banner-titulo"></h2>
-              <span id="cm-fruto" class="misterio-fruto-badge"></span>
+            <div id="card-misterio-banner" class="misterio-img-wrap">
+              <img id="cm-imagem" src="" alt="" class="misterio-img" onerror="this.closest('.misterio-img-wrap').classList.add('sem-imagem')" />
+              <div class="misterio-img-fade"></div>
+              <span id="cm-icone" class="misterio-img-icone"></span>
             </div>
-            <div class="px-content pt-5 pb-2">
-              <p class="label-xs mb-3">Meditação</p>
-              <p id="cm-meditacao" class="text-serif oracao-texto-muted selectable"></p>
+            <div class="misterio-info">
+              <p id="cm-titulo" class="misterio-info-label"></p>
+              <h2 id="cm-subtitulo" class="misterio-info-titulo"></h2>
+              <span id="cm-fruto" class="misterio-info-fruto"></span>
+              <div class="misterio-divider"></div>
+              <p class="misterio-info-label" style="margin-bottom:0.4rem">Meditação</p>
+              <p id="cm-meditacao" class="misterio-info-meditacao selectable"></p>
             </div>
           </div>
 
-          <!-- Card: oração normal -->
           <div id="card-oracao" class="px-content">
             <p id="secao" class="label-xs mb-2"></p>
             <h2 id="titulo-oracao" class="oracao-titulo"></h2>
@@ -158,54 +126,46 @@
             </div>
           </div>
 
-          <!-- Conclusão -->
           <div id="tela-concluido" class="hidden conclusao px-content">
-            <p class="conclusao-icone">🕊️</p>
+            <div class="conclusao-icone">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#b8952a" stroke-width="1.2"><line x1="12" y1="2" x2="12" y2="22"/><line x1="4" y1="8" x2="20" y2="8"/></svg>
+            </div>
             <h2 class="conclusao-titulo">Terço Concluído</h2>
             <p class="conclusao-msg">Que Nossa Senhora interceda por você e por todas as suas intenções.</p>
             <p class="conclusao-quote">"A oração do Rosário é o resumo de todo o Evangelho."</p>
-            <button id="btn-novamente" class="touch-btn ctrl-primary w-full mt-6">↺ Rezar Novamente</button>
+            <button id="btn-novamente" class="touch-btn ctrl-primary w-full mt-6">Rezar Novamente</button>
           </div>
+        </div>
 
-        </div><!-- /prayer-scroll -->
-
-        <!-- Controles fixos na base -->
         <div id="controls-bar" class="controls-bar">
           <div class="ctrl-row">
-            <button id="btn-voltar"  class="touch-btn ctrl-sec"     aria-label="Voltar">←</button>
-            <button id="btn-avancar" class="touch-btn ctrl-primary flex-1" aria-label="Avançar">Avançar 📿</button>
-            <button id="btn-resetar" class="touch-btn ctrl-sec"     aria-label="Reiniciar">↺</button>
+            <button id="btn-voltar"  class="touch-btn ctrl-sec" aria-label="Voltar">←</button>
+            <button id="btn-avancar" class="touch-btn ctrl-primary flex-1" aria-label="Avançar">Avançar</button>
+            <button id="btn-resetar" class="touch-btn ctrl-sec" aria-label="Reiniciar">↺</button>
           </div>
           <div class="auto-row">
-            <button id="btn-auto" class="touch-btn auto-btn">▶ Auto</button>
+            <button id="btn-auto" class="touch-btn auto-btn">&#9654; Auto</button>
             <div class="auto-slider-wrap">
-              <input id="slider-auto" type="range" min="3" max="30" value="8"
-                class="auto-slider" aria-label="Intervalo automático" />
+              <input id="slider-auto" type="range" min="3" max="30" value="8" class="auto-slider" aria-label="Intervalo automático" />
               <span id="label-auto" class="auto-label">8s</span>
             </div>
           </div>
         </div>
+      </div>
 
-      </div><!-- /secao-terco -->
-
-      <!-- ── LITURGIA ── -->
       <div id="secao-liturgia" class="section-full hidden liturgia-scroll">
-
-        <!-- Loading -->
         <div id="lit-loading" class="lit-state">
           <span class="loading loading-spinner loading-md lit-spinner"></span>
           <p class="lit-state-msg">Carregando leituras...</p>
         </div>
-
-        <!-- Erro -->
         <div id="lit-erro" class="lit-state hidden">
-          <p class="lit-state-icon">⚠️</p>
+          <div class="lit-state-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(184,149,42,0.55)" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
           <p class="lit-state-title">Não foi possível carregar</p>
           <p class="lit-state-msg">Verifique o servidor e a conexão.</p>
           <button id="lit-btn-recarregar" class="touch-btn ctrl-primary mt-6 px-10">Tentar novamente</button>
         </div>
-
-        <!-- Lista de leituras -->
         <div id="lit-lista" class="hidden px-content">
           <div class="lit-header">
             <p class="label-xs mb-2">Liturgia do Dia</p>
@@ -215,24 +175,24 @@
           </div>
           <div id="lit-items" class="lit-items"></div>
         </div>
+      </div>
+    </main>
 
-      </div><!-- /secao-liturgia -->
-
-    </main><!-- /app-main -->
-
-    <!-- Navegação inferior -->
     <nav id="bottom-nav" class="bottom-nav">
-      <button id="tab-terco"    class="touch-btn tab-btn tab-ativo" data-tab="terco">
-        <span class="tab-icone">📿</span>
+      <button id="tab-terco" class="touch-btn tab-btn tab-ativo" data-tab="terco">
+        <span class="tab-icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="6" r="2.5"/><path d="M12 8.5C12 14 6 17 6 17h12s-6-3-6-8.5z"/><line x1="12" y1="17" x2="12" y2="22"/><line x1="9" y1="19.5" x2="15" y2="19.5"/></svg>
+        </span>
         <span class="tab-label">Terço</span>
       </button>
       <button id="tab-liturgia" class="touch-btn tab-btn" data-tab="liturgia">
-        <span class="tab-icone">📖</span>
+        <span class="tab-icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+        </span>
         <span class="tab-label">Liturgia</span>
       </button>
     </nav>
-
-  </div><!-- /app -->
+  </div>
 
   <script src="scripts/misterios.js"></script>
   <script src="scripts/oracoes.js"></script>
@@ -244,11 +204,11 @@
   <script>
     (function(){
       const c = document.getElementById('stars-container');
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 35; i++) {
         const s = document.createElement('div');
         s.className = 'star';
-        const sz = Math.random() * 1.5 + 0.4;
-        s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${(Math.random()*5+3).toFixed(1)}s;animation-delay:${(Math.random()*6).toFixed(1)}s`;
+        const sz = Math.random() * 1.8 + 0.3;
+        s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${(Math.random()*6+3).toFixed(1)}s;animation-delay:${(Math.random()*7).toFixed(1)}s`;
         c.appendChild(s);
       }
     })();
