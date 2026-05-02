@@ -111,3 +111,16 @@ async function main() {
 }
 
 document.addEventListener('DOMContentLoaded', main);
+
+// Swipe horizontal para avançar/voltar
+(function(){
+  let startX = 0;
+  const app = document.getElementById('app');
+  app.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  app.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) < 50) return;
+    if (diff > 0) { UI.pulsarConta(); Contador.avancar(); }
+    else          { Contador.voltar(); }
+  }, { passive: true });
+})();
