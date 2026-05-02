@@ -14,7 +14,7 @@ from flask_cors import CORS
 from datetime import datetime
 
 # Aponta para a pasta frontend que está um nível acima do backend
-FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend")
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend")
 
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 CORS(app)  # permite chamadas do frontend (Capacitor / browser local)
