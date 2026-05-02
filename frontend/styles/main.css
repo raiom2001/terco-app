@@ -178,8 +178,8 @@ body {
 
 .overlay { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; overflow: hidden; }
 .overlay-bg { position: absolute; inset: 0; }
-.overlay-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.15; }
-.overlay-bg-fade { position: absolute; inset: 0; background: linear-gradient(to top, #0d0a07 25%, transparent 100%); }
+.overlay-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; }
+.overlay-bg-fade { position: absolute; inset: 0; background: linear-gradient(to top, #0d0a07 35%, rgba(13,10,7,0.3) 70%, transparent 100%); }
 .overlay-body { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; max-width: 480px; margin: 0 auto; width: 100%; padding-left: max(var(--safe-left), 1.25rem); padding-right: max(var(--safe-right), 1.25rem); }
 
 .cont-top { display: flex; align-items: flex-start; justify-content: space-between; padding-top: max(var(--safe-top), 3rem); padding-bottom: 0.75rem; }

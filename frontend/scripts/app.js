@@ -137,3 +137,15 @@ async function _carregarLiturgia() {
     UI.mostrarErroLiturgia();
   }
 }
+
+// Splash
+(function(){
+  const splash = document.getElementById('splash');
+  if (!splash) return;
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      gsap.to(splash, { opacity: 0, duration: 0.7, delay: 0.8,
+        onComplete: () => splash.remove() });
+    }, 300);
+  });
+})();
