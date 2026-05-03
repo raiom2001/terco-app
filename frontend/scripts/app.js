@@ -5,7 +5,7 @@ const API_BASE = 'https://terco-app.onrender.com';
 document.addEventListener('DOMContentLoaded', () => {
   UI.init();
   UI.exibirInfoDia(getMisteriosDoDia());
-  Terco.iniciar();
+  Terco.iniciar(getMisteriosDoDia());
   UI.renderizar(Terco.getEstado(), getMisteriosDoDia());
   _bindEventos();
   _carregarLiturgia();
